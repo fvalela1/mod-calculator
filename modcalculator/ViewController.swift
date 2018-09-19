@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     let backspaceButton: UIButton = {
         let button = UIButton()
-        button.setTitle("<--", for: .normal)
+        button.setTitle("←", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     
     let clearButton: UIButton = {
         let button = UIButton()
-        button.setTitle("C", for: .normal)
+        button.setTitle("c", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .red
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     
     let modButton: UIButton = {
         let button = UIButton()
-        button.setTitle("%", for: .normal)
+        button.setTitle("mod", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .green
         button.translatesAutoresizingMaskIntoConstraints = false
