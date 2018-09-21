@@ -15,6 +15,7 @@
 		6288AA3221504CDA008EACFC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6288AA3121504CDA008EACFC /* Assets.xcassets */; };
 		6288AA3521504CDA008EACFC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6288AA3321504CDA008EACFC /* LaunchScreen.storyboard */; };
 		6288AA4021504CDA008EACFC /* modcalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6288AA3F21504CDA008EACFC /* modcalculatorTests.swift */; };
+		62EB543521552C8B00CE0F58 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EB543421552C8B00CE0F58 /* Stack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		6288AA3B21504CDA008EACFC /* modcalculatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = modcalculatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6288AA3F21504CDA008EACFC /* modcalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = modcalculatorTests.swift; sourceTree = "<group>"; };
 		6288AA4121504CDA008EACFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62EB543421552C8B00CE0F58 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 				6288AA3321504CDA008EACFC /* LaunchScreen.storyboard */,
 				6288AA3621504CDA008EACFC /* Info.plist */,
 				626D1B242152F07D005173E4 /* Calculator.swift */,
+				62EB543421552C8B00CE0F58 /* Stack.swift */,
 			);
 			path = modcalculator;
 			sourceTree = "<group>";
@@ -212,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6288AA2D21504CD9008EACFC /* ViewController.swift in Sources */,
+				62EB543521552C8B00CE0F58 /* Stack.swift in Sources */,
 				6288AA2B21504CD9008EACFC /* AppDelegate.swift in Sources */,
 				626D1B272152F1B2005173E4 /* ItemModel.swift in Sources */,
 				626D1B252152F07D005173E4 /* Calculator.swift in Sources */,
