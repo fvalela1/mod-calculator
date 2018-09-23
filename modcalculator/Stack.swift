@@ -16,6 +16,11 @@ struct Stack<Element> {
     mutating func pop() -> Element {
         return items.removeLast()
     }
+    
+    mutating func clear() {
+        items.removeAll()
+    }
+    
     var size: Int {
         return items.count
     }
