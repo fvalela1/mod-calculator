@@ -21,6 +21,10 @@ struct Stack<Element> {
         items.removeAll()
     }
     
+    var isEmpty: Bool {
+        return items.isEmpty
+    }
+    
     var size: Int {
         return items.count
     }

@@ -10,17 +10,17 @@ import Foundation
 
 class ItemModel {
     
-    var operand = 0
-    var arithmeticOperator = " "
+    var operand: Double = 0.0
+    var arithmeticOperator: Character = " "
     lazy var isOperand: Bool = {
         return arithmeticOperator == " "
     }()
     
-    init(arithmeticOperator: String) {
+    init(arithmeticOperator: Character) {
         self.arithmeticOperator = arithmeticOperator
     }
     
-    init(operand: Int) {
+    init(operand: Double) {
         self.operand = operand
     }
     
