@@ -8,6 +8,7 @@
 
 import Foundation
 
+//put functions that the presenter will call to access VC
 protocol CalculatorDelegate {
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
@@ -20,6 +21,35 @@ class CalculatorPresenter {
         self.delegate = delegate
     }
     
-    func register(email: String, password: String, fullName: String, phoneNumber:String){
+    func clear() {
+        
+    }
+    
+    func equals() {
+        
+    }
+    
+    func undo() {
+        
+    }
+    
+    func pushOperator(op: String) {
+        
+    }
+    
+    private func getDigitValueFromStack() -> Double {
+        return Double.nan
+    }
+    
+    private func refreshFormulaView() {
+        
+    }
+    
+    private func refreshResultView(value: Double) {
+        
+    }
+    
+    func genericDigitListener(digit: Double) {
+        
     }
 }
