@@ -59,6 +59,7 @@ class ViewController: UIViewController {
         SV.translatesAutoresizingMaskIntoConstraints = false
         return SV
     }()
+    var presenter: CalculatorPresenter?
     
  
     //MARK: - setup views
@@ -90,6 +91,7 @@ class ViewController: UIViewController {
     //MARK: View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.presenter = CalculatorPresenter(delegate: self)
         setupViews()
     }
 
@@ -135,3 +137,12 @@ class ViewController: UIViewController {
     }
 }
 
+extension ViewController: CalculatorDelegate{
+    func calculationDidSucceed() {
+        
+    }
+    
+    func calculationDidFailed(message: String) {
+        
+    }
+}
