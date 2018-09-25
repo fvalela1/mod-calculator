@@ -8,7 +8,7 @@
 
 import Foundation
 
-//put functions that the presenter will call to access VC
+//put functions that the presenter will call to access ViewController
 protocol CalculatorDelegate {
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
