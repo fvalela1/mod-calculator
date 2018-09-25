@@ -9,7 +9,12 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    
+    let calculateTextView: UITextField = {
+        let textView = UITextField()
+        textView.backgroundColor = .green
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
+    }()
     let backspaceButton: UIButton = {
         let button = UIButton()
         button.setTitle("←", for: .normal)
@@ -61,7 +66,13 @@ class ViewController: UIViewController {
         self.view.addSubview(stackView)
         let wholeStackView = makeVerticalStackView()
         self.view.addSubview(wholeStackView)
-        
+        self.view.addSubview(calculateTextView)
+        NSLayoutConstraint.activate([
+            calculateTextView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            calculateTextView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            calculateTextView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            calculateTextView.bottomAnchor.constraint(equalTo: wholeStackView.topAnchor)
+            ])
         NSLayoutConstraint.activate([
             stackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             stackView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
@@ -122,7 +133,5 @@ class ViewController: UIViewController {
         largeStackView = makeHorizontalStackView(count: 9, largeContainerSV: &largeStackView)
         return largeStackView
     }
-
-
 }
 
