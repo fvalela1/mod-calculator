@@ -19,12 +19,12 @@
 
 import Foundation
 
-class Calculator {
+class CalculatorService {
     
-    var formula = Stack<ItemModel>()
+    var formula = Stack<Calculator>()
     
     func pushOperand(operand: Double) {
-        formula.push(ItemModel(operand: operand))
+        formula.push(Calculator(operand: operand))
     }
     
     func clear() {

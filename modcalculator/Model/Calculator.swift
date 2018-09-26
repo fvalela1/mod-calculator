@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ItemModel {
+class Calculator {
     
     var operand: Double = 0.0
     var arithmeticOperator: Character = " "
