@@ -9,6 +9,10 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    //MARK: Properties
+    var stack = Stack<Calculator>()
+    fileprivate var service = CalculatorService()
+    //MARK: UI Elements
     let calculateTextView: UITextField = {
         let textView = UITextField()
         textView.backgroundColor = .green
@@ -61,6 +65,22 @@ class ViewController: UIViewController {
     }()
     var presenter: CalculatorPresenter?
     
+    enum CalculatorKey: Int {
+        case zero = 1
+        case one
+        case two
+        case three
+        case four
+        case five
+        case six
+        case seven
+        case eight
+        case nine
+        case clear
+        case delete
+        case mod
+        case equal
+    }
  
     //MARK: - setup views
     fileprivate func setupViews() {
@@ -95,11 +115,6 @@ class ViewController: UIViewController {
         setupViews()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     private func makeHorizontalStackView(count: Int, largeContainerSV: inout UIStackView) -> UIStackView {
         
         if (count < 0) {
@@ -110,23 +125,54 @@ class ViewController: UIViewController {
         
         for eachCounter in count-2...count {
             if (eachCounter < 0) { continue }
-            let button = UIButton()
-            button.setTitle(String(eachCounter), for: .normal)
-            button.setTitleColor(.black, for: .normal)
-            button.backgroundColor = .yellow
-            buttons.append(button)
+            buttons.append(makeButton(from: eachCounter))
         }
-        
-        let stackView = UIStackView(arrangedSubviews: buttons)
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        largeContainerSV.addArrangedSubview(stackView)
+        largeContainerSV.addArrangedSubview(makeStackView(from: buttons))
         
         return makeHorizontalStackView(count: count-3, largeContainerSV: &largeContainerSV)
     }
     
+    
+    private func makeButton(from counter: Int) -> UIButton {
+        let button = UIButton()
+        button.setTitle(String(counter), for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .yellow
+        button.tag = counter
+        button.addTarget(self, action: #selector(onNumberButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }
+    
+    
+    @objc func onNumberButtonTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
+            let pressedNumber = sender.tag
+            service.pushOperand(operand: Double(pressedNumber))
+        case (CalculatorKey.clear.rawValue):
+            service.clear()
+        case (CalculatorKey.mod.rawValue):
+            //FIXME: fix the numbers
+            let output = service.mod(num1: 5, num2: 3)
+            print(output)
+        case (CalculatorKey.delete.rawValue):
+            service.undo()
+        case (CalculatorKey.equal.rawValue):
+            let output = service.recalculate()
+            print(output)
+        default:
+            break
+        }
+    }
+    
+    private func makeStackView(from buttons: [UIButton]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: buttons)
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
+    }
+    
     private func makeVerticalStackView() -> UIStackView {
-        
         var largeStackView = UIStackView()
         largeStackView.axis = .vertical
         largeStackView.distribution = .fillEqually
@@ -146,3 +192,5 @@ extension ViewController: CalculatorDelegate{
         
     }
 }
+
+
