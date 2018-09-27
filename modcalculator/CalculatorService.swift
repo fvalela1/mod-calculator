@@ -27,6 +27,15 @@ class CalculatorService {
         formula.push(Calculator(operand: operand))
     }
     
+    // Push an operator and pop the last formula element if it is an operator
+    // (can't have two operators one after the other)
+    func pushOperator(arithmeticOperator: Character) {
+        if (!(formula.peek?.isOperand)!) {
+            _ = formula.pop()
+        }
+        formula.push(Calculator(arithmeticOperator: arithmeticOperator))
+    }
+    
     func clear() {
         formula.clear()
     }
