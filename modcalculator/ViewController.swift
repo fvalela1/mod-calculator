@@ -14,6 +14,20 @@ class ViewController: UIViewController {
     fileprivate var service = CalculatorService()
     var presenter: CalculatorPresenter?
     var currentOperand = "0"
+    
+    enum CalculatorKey: Int {
+        case zero = 1
+        case one
+        case two
+        case three
+        case four
+        case five
+        case six
+        case seven
+        case eight
+        case nine
+    }
+    
     //MARK: UI Elements
     let calculateTextField: UITextField = {
         let textView = UITextField()
@@ -25,6 +39,7 @@ class ViewController: UIViewController {
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
+    
     
     //MARK: - setup views
     fileprivate func setupViews() {
@@ -79,10 +94,19 @@ class ViewController: UIViewController {
         let button = UIButton()
         button.setTitle(String(counter), for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(onNumberTapped(_:)), for: .touchUpInside)
         button.backgroundColor = .black
-        button.layer.cornerRadius = 40
-        button.clipsToBounds = true
+        button.tag = counter
         return button
+    }
+    
+    @objc func onNumberTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
+            presenter?.delegate?.buttonDidTap(sender.tag)
+        default:
+            break
+        }
     }
     
     //make array of UIButton, add them to the UIStackView and returns the UIStackView.
@@ -123,6 +147,10 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: CalculatorDelegate {
+    func buttonDidTap(_ value: Int) {
+        print("button pressed \(value)")
+    }
+    
     func calculationDidSucceed() {
         
     }

@@ -10,6 +10,7 @@ import Foundation
 
 //put functions that the presenter will call to access ViewController
 protocol CalculatorDelegate: class {
+    func buttonDidTap(_ value: Int)
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
 }
@@ -53,4 +54,5 @@ class CalculatorPresenter {
     func genericDigitListener(digit: Double) {
         
     }
+    
 }
