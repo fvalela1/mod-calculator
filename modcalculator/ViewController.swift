@@ -9,9 +9,18 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let calculateTextView: UITextField = {
+    //MARK: Properties
+    var stack = Stack<Calculator>()
+    fileprivate var service = CalculatorService()
+    var currentOperand = "0"
+    //MARK: UI Elements
+    let calculateTextField: UITextField = {
         let textView = UITextField()
-        textView.backgroundColor = .green
+        textView.backgroundColor = .black
+        textView.textColor = .lightGray
+        textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+        textView.textAlignment = .right
+        textView.text = "0"
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
@@ -20,6 +29,8 @@ class ViewController: UIViewController {
         button.setTitle("←", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .white
+        button.tag = 12
+        button.addTarget(self, action: #selector(onNumberButtonTapped(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -29,6 +40,8 @@ class ViewController: UIViewController {
         button.setTitle("c", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .red
+        button.tag = 11
+        button.addTarget(self, action: #selector(onNumberButtonTapped(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -38,6 +51,8 @@ class ViewController: UIViewController {
         button.setTitle("=", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .blue
+        button.tag = 14
+        button.addTarget(self, action: #selector(onNumberButtonTapped(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -47,6 +62,8 @@ class ViewController: UIViewController {
         button.setTitle("mod", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .green
+        button.tag = 13
+        button.addTarget(self, action: #selector(onNumberButtonTapped(_:)), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -59,20 +76,37 @@ class ViewController: UIViewController {
         SV.translatesAutoresizingMaskIntoConstraints = false
         return SV
     }()
+    
     var presenter: CalculatorPresenter?
     
- 
+    enum CalculatorKey: Int {
+        case zero = 1
+        case one
+        case two
+        case three
+        case four
+        case five
+        case six
+        case seven
+        case eight
+        case nine
+        case clear
+        case delete
+        case mod
+        case equal
+    }
+    
     //MARK: - setup views
     fileprivate func setupViews() {
         self.view.addSubview(stackView)
         let wholeStackView = makeVerticalStackView()
         self.view.addSubview(wholeStackView)
-        self.view.addSubview(calculateTextView)
+        self.view.addSubview(calculateTextField)
         NSLayoutConstraint.activate([
-            calculateTextView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            calculateTextView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            calculateTextView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            calculateTextView.bottomAnchor.constraint(equalTo: wholeStackView.topAnchor)
+            calculateTextField.topAnchor.constraint(equalTo: self.view.topAnchor),
+            calculateTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            calculateTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            calculateTextField.bottomAnchor.constraint(equalTo: wholeStackView.topAnchor)
             ])
         NSLayoutConstraint.activate([
             stackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
@@ -91,13 +125,9 @@ class ViewController: UIViewController {
     //MARK: View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = .black
         self.presenter = CalculatorPresenter(delegate: self)
         setupViews()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     private func makeHorizontalStackView(count: Int, largeContainerSV: inout UIStackView) -> UIStackView {
@@ -110,23 +140,55 @@ class ViewController: UIViewController {
         
         for eachCounter in count-2...count {
             if (eachCounter < 0) { continue }
-            let button = UIButton()
-            button.setTitle(String(eachCounter), for: .normal)
-            button.setTitleColor(.black, for: .normal)
-            button.backgroundColor = .yellow
-            buttons.append(button)
+            buttons.append(makeButton(from: eachCounter))
         }
-        
-        let stackView = UIStackView(arrangedSubviews: buttons)
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        largeContainerSV.addArrangedSubview(stackView)
+        largeContainerSV.addArrangedSubview(makeStackView(from: buttons))
         
         return makeHorizontalStackView(count: count-3, largeContainerSV: &largeContainerSV)
     }
     
+    
+    private func makeButton(from counter: Int) -> UIButton {
+        let button = UIButton()
+        button.setTitle(String(counter), for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .yellow
+        button.layer.cornerRadius = 40
+        button.clipsToBounds = true
+        button.tag = counter
+        button.addTarget(self, action: #selector(onNumberButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }
+    
+    
+    @objc func onNumberButtonTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
+            let pressedNumber = (sender.tag)
+            calculateTextField.text = presenter?.pushOperator(op: String(pressedNumber))
+        case (CalculatorKey.clear.rawValue):
+            calculateTextField.text = presenter?.clear()
+        case (CalculatorKey.mod.rawValue):
+            let output = presenter?.pushOperator(op: String(sender.tag))
+            print(output)
+        case (CalculatorKey.delete.rawValue):
+            service.undo()
+        case (CalculatorKey.equal.rawValue):
+            let output = service.recalculate()
+            print(output)
+        default:
+            break
+        }
+    }
+    
+    private func makeStackView(from buttons: [UIButton]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: buttons)
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        return stackView
+    }
+    
     private func makeVerticalStackView() -> UIStackView {
-        
         var largeStackView = UIStackView()
         largeStackView.axis = .vertical
         largeStackView.distribution = .fillEqually
@@ -135,9 +197,20 @@ class ViewController: UIViewController {
         largeStackView = makeHorizontalStackView(count: 9, largeContainerSV: &largeStackView)
         return largeStackView
     }
+    
+    // Contacnates numbers until user hit an operator button.
+    private func getStoredOperand(from value: Int) -> String {
+        let operand = "\(value)"
+        if currentOperand == "0" {
+            currentOperand = operand
+        } else {
+            currentOperand += operand
+        }
+        return currentOperand
+    }
 }
 
-extension ViewController: CalculatorDelegate{
+extension ViewController: CalculatorDelegate {
     func calculationDidSucceed() {
         
     }
@@ -146,3 +219,5 @@ extension ViewController: CalculatorDelegate{
         
     }
 }
+
+

@@ -21,6 +21,10 @@ import Foundation
 
 class CalculatorService {
     
+    deinit {
+        print("I'm well gone, bruh")
+    }
+    
     var formula = Stack<Calculator>()
     
     func pushOperand(operand: Double) {
