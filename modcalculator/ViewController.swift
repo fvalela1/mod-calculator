@@ -11,7 +11,6 @@ class ViewController: UIViewController {
     
     //MARK: Properties
     var stack = Stack<Calculator>()
-    fileprivate var service = CalculatorService()
     var currentOperand = "0"
     //MARK: UI Elements
     let calculateTextField: UITextField = {
@@ -92,7 +91,7 @@ class ViewController: UIViewController {
         case nine
         case clear
         case delete
-        case mod
+        case mod //make this equal to the unicode number for mod
         case equal
     }
     
@@ -165,17 +164,19 @@ class ViewController: UIViewController {
         switch sender.tag {
         case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
             let pressedNumber = (sender.tag)
-            calculateTextField.text = presenter?.pushOperator(op: String(pressedNumber))
+            presenter?.genericDigitListener(digit: Double(pressedNumber))
         case (CalculatorKey.clear.rawValue):
-            calculateTextField.text = presenter?.clear()
+            presenter?.clear()
         case (CalculatorKey.mod.rawValue):
-            let output = presenter?.pushOperator(op: String(sender.tag))
-            print(output)
+            // convert Int to a valid UnicodeScalar
+            guard let unicodeScalar = UnicodeScalar(sender.tag) else {
+                return
+            }
+            presenter?.pushOperator(op: Character(unicodeScalar))
         case (CalculatorKey.delete.rawValue):
-            service.undo()
+            presenter?.undo()
         case (CalculatorKey.equal.rawValue):
-            let output = service.recalculate()
-            print(output)
+            presenter?.equals()
         default:
             break
         }
