@@ -12,6 +12,17 @@ class ViewController: UIViewController {
     //MARK: Properties
     var stack = Stack<Calculator>()
     fileprivate var service = CalculatorService()
+    var currentOperand = "0"
+    //MARK: UI Elements
+    let calculateTextField: UITextField = {
+        let textView = UITextField()
+        textView.backgroundColor = .black
+        textView.textColor = .lightGray
+        textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+        textView.textAlignment = .right
+        textView.text = "0"
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
     var presenter: CalculatorPresenter?
     var currentOperand = "0"
     
@@ -26,6 +37,10 @@ class ViewController: UIViewController {
         case seven
         case eight
         case nine
+        case clear
+        case delete
+        case mod //make this equal to the unicode number for mod
+        case equal
     }
     
     //MARK: UI Elements
@@ -103,7 +118,20 @@ class ViewController: UIViewController {
     @objc func onNumberTapped(_ sender: UIButton) {
         switch sender.tag {
         case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
-            presenter?.delegate?.buttonDidTap(sender.tag)
+            let pressedNumber = (sender.tag)
+            presenter?.genericDigitListener(digit: Double(pressedNumber))
+        case (CalculatorKey.clear.rawValue):
+            presenter?.clear()
+        case (CalculatorKey.mod.rawValue):
+            // convert Int to a valid UnicodeScalar
+            guard let unicodeScalar = UnicodeScalar(sender.tag) else {
+                return
+            }
+            presenter?.pushOperator(op: Character(unicodeScalar))
+        case (CalculatorKey.delete.rawValue):
+            presenter?.undo()
+        case (CalculatorKey.equal.rawValue):
+            presenter?.equals()
         default:
             break
         }

@@ -31,4 +31,8 @@ struct Stack<Element> {
     var peek: Element? {
         return items.isEmpty ? nil : items[items.count - 1]
     }
+    
+    func reversed() -> [Element?] {
+        return items.reversed()
+    }
 }
