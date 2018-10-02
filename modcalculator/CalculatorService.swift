@@ -34,7 +34,8 @@ class CalculatorService {
     // Push an operator and pop the last formula element if it is an operator
     // (can't have two operators one after the other)
     func pushOperator(arithmeticOperator: Character) {
-        if (!(formula.peek?.isOperand)!) {
+        print(arithmeticOperator)
+        if (!(formula.peek?.isOperand ?? false)) {
             _ = formula.pop()
         }
         formula.push(Calculator(arithmeticOperator: arithmeticOperator))
@@ -54,9 +55,9 @@ class CalculatorService {
         
         var total = 0.0
         var mostRecentOperator: Character? = nil
-        
-        while formula.peek != nil {
-            let currentItem = formula.pop()
+        var count = 0
+        while (count < formula.size) {
+            guard let currentItem = formula.peek else { return 0.0 }
             if (!currentItem.isOperand) {
                 mostRecentOperator = currentItem.arithmeticOperator
             } else if (mostRecentOperator == nil) {
@@ -70,6 +71,7 @@ class CalculatorService {
                     break
                 }
             }
+            count += 1
         }
         return total
     }
