@@ -95,6 +95,21 @@ class CalculatorPresenter {
         return ret
     }
     
+    // Undo the last operation and refresh the views to reflect the change.
+    func undo() {
+        if (digitStack.isEmpty) {
+            calc.undo()
+            lastOperator = nil
+            lastOperand = calc.recalculate()
+            refreshFormulaView()
+            refreshResultView(value: lastOperand ?? 0.0)
+        } else {
+            digitStack.clear()
+            refreshFormulaView()
+        }
+    }
+    
+    
     private func refreshFormulaView() {
         let completeDigitalValue = getDigitValueFromStack()
         let curr: String = digitStack.isEmpty ? "" : String(completeDigitalValue)
