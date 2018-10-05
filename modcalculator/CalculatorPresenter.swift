@@ -85,14 +85,12 @@ class CalculatorPresenter {
     }
     
     private func getDigitValueFromStack() -> Double {
-        var ret = 0.0
+        var valueToReturn = 0.0
         let reversedDigitStack = digitStack.reversed()
         for (index, digit) in reversedDigitStack.enumerated() {
-            ret += digit! * pow(10.0, Double(index))
+            valueToReturn += digit! * pow(10.0, Double(index))
         }
-        
-        
-        return ret
+        return valueToReturn
     }
     
     // Undo the last operation and refresh the views to reflect the change.
@@ -112,7 +110,7 @@ class CalculatorPresenter {
     
     private func refreshFormulaView() {
         let completeDigitalValue = getDigitValueFromStack()
-        let curr: String = digitStack.isEmpty ? "" : String(completeDigitalValue)
+        let current: String = digitStack.isEmpty ? "" : String(completeDigitalValue)
 
         switch (lastOperator != nil && lastOperand != nil) {
         case true:
