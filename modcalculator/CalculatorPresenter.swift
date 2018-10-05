@@ -53,15 +53,7 @@ class CalculatorPresenter {
             refreshFormulaView()
         }
     }
-    // Undo the last operation and refresh the views to reflect the change.
-    func undo() {
-        
-    }
-    
-    func mod(num1: Double, num2: Double) {
-   
-    }
-    
+ 
     func pushOperator(op: String) {
 
         if (digitStack.isEmpty) {
