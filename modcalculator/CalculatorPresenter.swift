@@ -10,6 +10,7 @@ import Foundation
 
 //put functions that the presenter will call to access ViewController
 protocol CalculatorDelegate: class {
+    func buttonDidTap(_ value: Int)
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
 }
@@ -30,6 +31,7 @@ class CalculatorPresenter {
         self.lastOperator = nil
     }
 
+
     // Clear the calculator stack and the local digit stack.
     func clear() {
         calc.clear()
@@ -38,6 +40,7 @@ class CalculatorPresenter {
         lastOperator = nil
         refreshFormulaView()
         refreshResultView(value: calc.recalculate())
+      
     }
     // Push the digit stack to the calculator, recalculate the result and display it.
     func equals() {
@@ -50,8 +53,9 @@ class CalculatorPresenter {
             refreshFormulaView()
         }
     }
-    // Undo the last operation and refresh the views to reflect the change.
-    func undo() {
+ 
+    func pushOperator(op: String) {
+
         if (digitStack.isEmpty) {
             calc.undo()
             lastOperator = nil
@@ -81,19 +85,32 @@ class CalculatorPresenter {
     }
     
     private func getDigitValueFromStack() -> Double {
-        var ret = 0.0
+        var valueToReturn = 0.0
         let reversedDigitStack = digitStack.reversed()
         for (index, digit) in reversedDigitStack.enumerated() {
-            ret += digit! * pow(10.0, Double(index))
+            valueToReturn += digit! * pow(10.0, Double(index))
         }
-        
-        
-        return ret
+        return valueToReturn
     }
+    
+    // Undo the last operation and refresh the views to reflect the change.
+    func undo() {
+        if (digitStack.isEmpty) {
+            calc.undo()
+            lastOperator = nil
+            lastOperand = calc.recalculate()
+            refreshFormulaView()
+            refreshResultView(value: lastOperand ?? 0.0)
+        } else {
+            digitStack.clear()
+            refreshFormulaView()
+        }
+    }
+    
     
     private func refreshFormulaView() {
         let completeDigitalValue = getDigitValueFromStack()
-        let curr: String = digitStack.isEmpty ? "" : String(completeDigitalValue)
+        let current: String = digitStack.isEmpty ? "" : String(completeDigitalValue)
 
         switch (lastOperator != nil && lastOperand != nil) {
         case true:
@@ -127,4 +144,5 @@ class CalculatorPresenter {
         digitStack.push(digit)
         refreshFormulaView()
     }
+    
 }

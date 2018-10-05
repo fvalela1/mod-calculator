@@ -12,15 +12,16 @@ class Calculator {
     
     var operand: Double = 0.0
     var arithmeticOperator: Character = " "
-    lazy var isOperand: Bool = {
-        return arithmeticOperator == " "
-    }()
+    var isOperand: Bool
+    
     
     init(arithmeticOperator: Character) {
+        self.isOperand = arithmeticOperator == " "
         self.arithmeticOperator = arithmeticOperator
     }
     
     init(operand: Double) {
+        self.isOperand = arithmeticOperator == " "
         self.operand = operand
     }
     
