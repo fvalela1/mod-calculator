@@ -10,10 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     
     //MARK: Properties
-    var stack = Stack<Calculator>()
-    fileprivate var service = CalculatorService()
     var presenter: CalculatorPresenter?
-    var currentOperand = "0"
     
     enum CalculatorKey: Int {
         case zero = 1
@@ -33,8 +30,8 @@ class ViewController: UIViewController {
     }
     
     //MARK: UI Elements
-    let calculateTextField: UITextField = {
-        let textView = UITextField()
+    let calculateTextView: UITextView = {
+        let textView = UITextView()
         textView.backgroundColor = .black
         textView.textColor = .lightGray
         textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
@@ -46,16 +43,16 @@ class ViewController: UIViewController {
     
     //MARK: - setup views
     fileprivate func setupViews() {
-        let numbersStackView = makeVerticalStackView()
+        let numbersStackView = makeVerticalNumberStackView()
         let operatorStackView = makeOperatorsStackView()
         self.view.addSubview(numbersStackView)
         self.view.addSubview(operatorStackView)
-        self.view.addSubview(calculateTextField)
+        self.view.addSubview(calculateTextView)
         NSLayoutConstraint.activate([
-            calculateTextField.topAnchor.constraint(equalTo: self.view.topAnchor),
-            calculateTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -8),
-            calculateTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            calculateTextField.bottomAnchor.constraint(equalTo: numbersStackView.topAnchor),
+            calculateTextView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            calculateTextView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -8),
+            calculateTextView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            calculateTextView.bottomAnchor.constraint(equalTo: numbersStackView.topAnchor),
             //MARK: operator stack view constraints
             operatorStackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             operatorStackView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
@@ -86,7 +83,7 @@ class ViewController: UIViewController {
             if (eachCounter < 0) { continue }
             buttons.append(makeButton(from: eachCounter))
         }
-        largeContainerSV.addArrangedSubview(makeStackView(from: buttons))
+        largeContainerSV.addArrangedSubview(makeHorizontalStackViewHelper(from: buttons))
         return makeHorizontalStackView(count: count-3, largeContainerSV: &largeContainerSV)
     }
     
@@ -143,14 +140,14 @@ class ViewController: UIViewController {
         return operatorStackView
     }
     
-    private func makeStackView(from buttons: [UIButton]) -> UIStackView {
+    private func makeHorizontalStackViewHelper(from buttons: [UIButton]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: buttons)
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         return stackView
     }
     
-    private func makeVerticalStackView() -> UIStackView {
+    private func makeVerticalNumberStackView() -> UIStackView {
         var largeStackView = UIStackView()
         largeStackView.axis = .vertical
         largeStackView.distribution = .fillEqually
@@ -161,7 +158,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: CalculatorDelegate {
+extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func buttonDidTap(_ value: Int) {
         print("button pressed \(value)")
     }
