@@ -10,10 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     
     //MARK: Properties
-    var stack = Stack<Calculator>()
-    fileprivate var service = CalculatorService()
     var presenter: CalculatorPresenter?
-    var currentOperand = "0"
     
     enum CalculatorKey: Int {
         case zero = 1
@@ -28,44 +25,36 @@ class ViewController: UIViewController {
         case nine
         case clear
         case delete
-        case mod //make this equal to the unicode number for mod
+        case mod
         case equal
     }
     
-    //MARK: UI Elements
-    let calculateTextField: UITextField = {
-        let textView = UITextField()
-        textView.backgroundColor = .black
-        textView.textColor = .lightGray
-        textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
-        textView.textAlignment = .right
-        textView.text = "0"
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        return textView
-    }()
-    
     //MARK: - setup views
-    fileprivate func setupViews() {
-        let numbersStackView = makeVerticalStackView()
+    private func setupViews() {
+        let calculationStackView = makeCalculationStackView()
+        let numbersStackView = makeVerticalNumberStackView()
         let operatorStackView = makeOperatorsStackView()
         self.view.addSubview(numbersStackView)
         self.view.addSubview(operatorStackView)
-        self.view.addSubview(calculateTextField)
+        self.view.addSubview(calculationStackView)
         NSLayoutConstraint.activate([
-            calculateTextField.topAnchor.constraint(equalTo: self.view.topAnchor),
-            calculateTextField.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -8),
-            calculateTextField.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            calculateTextField.bottomAnchor.constraint(equalTo: numbersStackView.topAnchor),
+            //MARK: calculation stack view constraints
+            calculationStackView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            calculationStackView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -8),
+            calculationStackView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            calculationStackView.bottomAnchor.constraint(equalTo: numbersStackView.topAnchor),
             //MARK: operator stack view constraints
             operatorStackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             operatorStackView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            operatorStackView.topAnchor.constraint(equalTo: self.view.centerYAnchor),
+            //TODO: change  constant to a view divided number
+            operatorStackView.topAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -100),
             operatorStackView.widthAnchor.constraint(equalToConstant: self.view.frame.width/6),
             //MARK: numbers stack view constraints
             numbersStackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             numbersStackView.rightAnchor.constraint(equalTo: operatorStackView.leftAnchor),
             numbersStackView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            numbersStackView.topAnchor.constraint(equalTo: self.view.centerYAnchor)
+            //TODO: change  constant to a view divided number
+            numbersStackView.topAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -100)
             ])
     }
     
@@ -77,6 +66,44 @@ class ViewController: UIViewController {
         setupViews()
     }
     
+    //MARK: Creating and populating UI Elements
+    private func makeCalculationStackView() -> UIStackView {
+        let arrOfResultAndFormulaTextView = makeResultAndFormulaTextView()
+        let calculationStackView = UIStackView(arrangedSubviews: arrOfResultAndFormulaTextView)
+        calculationStackView.axis = .vertical
+        calculationStackView.distribution = .fillEqually
+        calculationStackView.translatesAutoresizingMaskIntoConstraints = false
+        calculationStackView.backgroundColor = .black
+        return calculationStackView
+    }
+    
+    private func makeResultAndFormulaTextView() -> [UITextView] {
+        let titles = ["_", "resultTextView", "formulaTextView"]
+        var calculationTextViews = [UITextView]()
+        for (index, _) in titles.enumerated() {
+            let textView = UITextView()
+            textView.backgroundColor = .black
+            textView.textAlignment = .right
+            textView.translatesAutoresizingMaskIntoConstraints = false
+            
+            switch(index) {
+            case (1):
+                textView.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+                textView.textColor = .darkGray
+                textView.text = "test"
+                textView.textAlignment = .right
+            case (2):
+                textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
+                textView.textColor = .lightGray
+                textView.text = "0"
+            default:
+                break
+            }
+            calculationTextViews.append(textView)
+        }
+        return calculationTextViews
+    }
+    
     private func makeHorizontalStackView(count: Int, largeContainerSV: inout UIStackView) -> UIStackView {
         if (count < 0) {
             return largeContainerSV
@@ -86,10 +113,9 @@ class ViewController: UIViewController {
             if (eachCounter < 0) { continue }
             buttons.append(makeButton(from: eachCounter))
         }
-        largeContainerSV.addArrangedSubview(makeStackView(from: buttons))
+        largeContainerSV.addArrangedSubview(makeHorizontalStackViewHelper(from: buttons))
         return makeHorizontalStackView(count: count-3, largeContainerSV: &largeContainerSV)
     }
-    
     
     private func makeButton(from counter: Int) -> UIButton {
         let button = UIButton()
@@ -99,25 +125,6 @@ class ViewController: UIViewController {
         button.backgroundColor = .black
         button.tag = counter
         return button
-    }
-    
-    @objc func onNumberTapped(_ sender: UIButton) {
-        switch sender.tag {
-        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
-            let pressedNumber = (sender.tag)
-            presenter?.genericDigitListener(digit: Double(pressedNumber))
-        case (CalculatorKey.clear.rawValue):
-            presenter?.clear()
-        case (CalculatorKey.mod.rawValue):
-            // convert Int to a valid UnicodeScalar
-            presenter?.pushOperator(op: Character(sender.currentTitle!))
-        case (CalculatorKey.delete.rawValue):
-            presenter?.undo()
-        case (CalculatorKey.equal.rawValue):
-            presenter?.equals()
-        default:
-            break
-        }
     }
     
     //make array of UIButton, add them to the UIStackView and returns the UIStackView.
@@ -143,14 +150,14 @@ class ViewController: UIViewController {
         return operatorStackView
     }
     
-    private func makeStackView(from buttons: [UIButton]) -> UIStackView {
+    private func makeHorizontalStackViewHelper(from buttons: [UIButton]) -> UIStackView {
         let stackView = UIStackView(arrangedSubviews: buttons)
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         return stackView
     }
     
-    private func makeVerticalStackView() -> UIStackView {
+    private func makeVerticalNumberStackView() -> UIStackView {
         var largeStackView = UIStackView()
         largeStackView.axis = .vertical
         largeStackView.distribution = .fillEqually
@@ -159,9 +166,29 @@ class ViewController: UIViewController {
         largeStackView = makeHorizontalStackView(count: 9, largeContainerSV: &largeStackView)
         return largeStackView
     }
+    
+    //MARK: button object functionality
+    @objc func onNumberTapped(_ sender: UIButton) {
+        switch sender.tag {
+        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
+            let pressedNumber = (sender.tag)
+            presenter?.genericDigitListener(digit: Double(pressedNumber))
+        case (CalculatorKey.clear.rawValue):
+            presenter?.clear()
+        case (CalculatorKey.mod.rawValue):
+            // convert Int to a valid UnicodeScalar
+            presenter?.pushOperator(op: Character(sender.currentTitle!))
+        case (CalculatorKey.delete.rawValue):
+            presenter?.undo()
+        case (CalculatorKey.equal.rawValue):
+            presenter?.equals()
+        default:
+            break
+        }
+    }
 }
 
-extension ViewController: CalculatorDelegate {
+extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func buttonDidTap(_ value: Int) {
         print("button pressed \(value)")
     }
@@ -174,5 +201,3 @@ extension ViewController: CalculatorDelegate {
         
     }
 }
-
-
