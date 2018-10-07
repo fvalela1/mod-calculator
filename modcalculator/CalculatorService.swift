@@ -55,24 +55,26 @@ class CalculatorService {
         
         var total = 0.0
         var mostRecentOperator: Character? = nil
-        var count = 0
-        while (count < formula.size) {
-            guard let currentItem = formula.peek else { return 0.0 }
+        var tempFormulaStack = Stack<Calculator>()
+        while (!formula.isEmpty) {
+            let currentItem: Calculator = formula.pop()
+            tempFormulaStack.push(currentItem)
             if (!currentItem.isOperand) {
                 mostRecentOperator = currentItem.arithmeticOperator
             } else if (mostRecentOperator == nil) {
                 total += currentItem.operand
             } else {
                 switch mostRecentOperator {
-                case "%": total = mod(num1: total, num2: currentItem.operand)
+                case "%": total = mod(num1: currentItem.operand, num2: total)
                 case .none:
                     break
                 case .some(_):
                     break
                 }
             }
-            count += 1
         }
+        tempFormulaStack.reverseStack()
+        formula = tempFormulaStack
         return total
     }
     
