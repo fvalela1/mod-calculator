@@ -29,7 +29,6 @@ class ViewController: UIViewController {
         case equal
     }
     
-    
     //MARK: - setup views
     private func setupViews() {
         let calculationStackView = makeCalculationStackView()
@@ -67,7 +66,7 @@ class ViewController: UIViewController {
         setupViews()
     }
     
-    //MARK: UI Elements
+    //MARK: Creating and populating UI Elements
     private func makeCalculationStackView() -> UIStackView {
         let arrOfResultAndFormulaTextView = makeResultAndFormulaTextView()
         let calculationStackView = UIStackView(arrangedSubviews: arrOfResultAndFormulaTextView)
@@ -78,14 +77,11 @@ class ViewController: UIViewController {
         return calculationStackView
     }
     
-    
     private func makeResultAndFormulaTextView() -> [UITextView] {
         let titles = ["_", "resultTextView", "formulaTextView"]
         var calculationTextViews = [UITextView]()
-        let tagCounter = 15 //number taken from makeOperatorStackView() - could be refactored
-        for (index, value) in titles.enumerated() {
+        for (index, _) in titles.enumerated() {
             let textView = UITextView()
-            textView.text = value
             textView.backgroundColor = .black
             textView.textAlignment = .right
             textView.translatesAutoresizingMaskIntoConstraints = false
@@ -96,12 +92,10 @@ class ViewController: UIViewController {
                 textView.textColor = .darkGray
                 textView.text = "test"
                 textView.textAlignment = .right
-                textView.tag = tagCounter + index
             case (2):
                 textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
                 textView.textColor = .lightGray
                 textView.text = "0"
-                textView.tag = tagCounter + index
             default:
                 break
             }
@@ -123,7 +117,6 @@ class ViewController: UIViewController {
         return makeHorizontalStackView(count: count-3, largeContainerSV: &largeContainerSV)
     }
     
-    
     private func makeButton(from counter: Int) -> UIButton {
         let button = UIButton()
         button.setTitle(String(counter), for: .normal)
@@ -133,8 +126,6 @@ class ViewController: UIViewController {
         button.tag = counter
         return button
     }
-    
-    
     
     //make array of UIButton, add them to the UIStackView and returns the UIStackView.
     private func makeOperatorsStackView() -> UIStackView {
@@ -210,5 +201,3 @@ extension ViewController: CalculatorDelegate, UITextViewDelegate {
         
     }
 }
-
-
