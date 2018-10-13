@@ -9,7 +9,8 @@
 import Foundation
 
 struct Stack<Element> {
-    var items = [Element]()
+    fileprivate var items = [Element]()
+    
     mutating func push(_ item: Element) {
         items.append(item)
     }
@@ -32,7 +33,19 @@ struct Stack<Element> {
         return items.isEmpty ? nil : items[items.count - 1]
     }
     
-    func reversed() -> [Element?] {
+    func reversedArray() -> [Element?] {
         return items.reversed()
+    }
+    
+    fileprivate func getItems() -> [Element] {
+        return items
+    }
+    
+    mutating func reverseStack() {
+        var tempStack = Stack<Element>()
+        while (!isEmpty) {
+            tempStack.push(pop())
+        }
+        items = tempStack.items
     }
 }

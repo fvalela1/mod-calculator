@@ -11,6 +11,8 @@ class ViewController: UIViewController {
     
     //MARK: Properties
     var presenter: CalculatorPresenter?
+    var resultTextView: UITextView?
+    var formulaTextView: UITextView?
     
     enum CalculatorKey: Int {
         case zero = 1
@@ -92,10 +94,12 @@ class ViewController: UIViewController {
                 textView.textColor = .darkGray
                 textView.text = "test"
                 textView.textAlignment = .right
+                self.resultTextView = textView
             case (2):
                 textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
                 textView.textColor = .lightGray
                 textView.text = "0"
+                self.formulaTextView = textView
             default:
                 break
             }
@@ -189,6 +193,10 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: CalculatorDelegate, UITextViewDelegate {
+    func resultsDidRefresh(value: Double) {
+        self.resultTextView?.text = String(value)
+    }
+    
     func buttonDidTap(_ value: Int) {
         print("button pressed \(value)")
     }

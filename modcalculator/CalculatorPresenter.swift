@@ -11,6 +11,7 @@ import Foundation
 //put functions that the presenter will call to access ViewController
 protocol CalculatorDelegate: class {
     func buttonDidTap(_ value: Int)
+    func resultsDidRefresh(value: Double)
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
 }
@@ -86,7 +87,7 @@ class CalculatorPresenter {
     
     private func getDigitValueFromStack() -> Double {
         var valueToReturn = 0.0
-        let reversedDigitStack = digitStack.reversed()
+        let reversedDigitStack = digitStack.reversedArray()
         for (index, digit) in reversedDigitStack.enumerated() {
             valueToReturn += digit! * pow(10.0, Double(index))
         }
@@ -133,7 +134,7 @@ class CalculatorPresenter {
     
     //TODO
     private func refreshResultView(value: Double) {
-        //refresh view from view controller
+        delegate?.resultsDidRefresh(value: value)
     }
     
     func genericDigitListener(digit: Double) {
