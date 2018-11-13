@@ -12,6 +12,7 @@ import Foundation
 protocol CalculatorDelegate: class {
     func buttonDidTap(_ value: Int)
     func resultsDidRefresh(value: Double)
+    func formulaDidRefresh(value: String)
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
 }
@@ -111,10 +112,13 @@ class CalculatorPresenter {
     
     private func refreshFormulaView() {
         let completeDigitalValue = getDigitValueFromStack()
-        let current: String = digitStack.isEmpty ? "" : String(completeDigitalValue)
-
+        let current: String = digitStack.isEmpty ? "" : String(Int(completeDigitalValue))
+    
         switch (lastOperator != nil && lastOperand != nil) {
         case true:
+            let previous = String(Int(lastOperand ?? -1))
+            
+            delegate?.formulaDidRefresh(value: previous + " " + String(lastOperator ?? "a") + " " + current)
             return //temporary
             //TODO Look into this portion and understasnd logic
 //            let template = activity.resources.getString(R.string.formula)
@@ -123,11 +127,12 @@ class CalculatorPresenter {
 //            activity.formula.text = String.format(template, previous, lastOperator, curr)
         case false:
             if lastOperand != nil  {
-                //may be broken, need to check how many decimals are needed (if any are needed at all)
-                let cleanLast: String = String(format: "%.16f", lastOperand ?? " ")
-                //TODO make textview from view controller = cleanLast
+                //will need to uncomment if we start working with doubles instead of ints
+//                let cleanLast: String = String(format: "%.16f", lastOperand ?? " ")
+                let cleanLastInt: String = String(Int(lastOperand ?? -1))
+                delegate?.formulaDidRefresh(value: cleanLastInt)
             } else {
-                //TODO make textview from view controller = curr
+                delegate?.formulaDidRefresh(value: current)
             }
         }
     }
@@ -135,6 +140,10 @@ class CalculatorPresenter {
     //TODO
     private func refreshResultView(value: Double) {
         delegate?.resultsDidRefresh(value: value)
+    }
+    
+    private func refreshFormulaView(value: String) {
+        delegate?.formulaDidRefresh(value: value)
     }
     
     func genericDigitListener(digit: Double) {

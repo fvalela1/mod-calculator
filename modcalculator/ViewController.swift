@@ -174,7 +174,10 @@ class ViewController: UIViewController {
     //MARK: button object functionality
     @objc func onNumberTapped(_ sender: UIButton) {
         switch sender.tag {
-        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
+        case (0):
+            let pressedNumber = (sender.tag)
+            presenter?.genericDigitListener(digit: Double(pressedNumber))
+        case (CalculatorKey.one.rawValue)...(CalculatorKey.nine.rawValue):
             let pressedNumber = (sender.tag)
             presenter?.genericDigitListener(digit: Double(pressedNumber))
         case (CalculatorKey.clear.rawValue):
@@ -195,6 +198,10 @@ class ViewController: UIViewController {
 extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func resultsDidRefresh(value: Double) {
         self.resultTextView?.text = String(value)
+    }
+    
+    func formulaDidRefresh(value: String) {
+        self.formulaTextView?.text = value
     }
     
     func buttonDidTap(_ value: Int) {
