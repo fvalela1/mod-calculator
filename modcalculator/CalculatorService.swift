@@ -34,7 +34,6 @@ class CalculatorService {
     // Push an operator and pop the last formula element if it is an operator
     // (can't have two operators one after the other)
     func pushOperator(arithmeticOperator: Character) {
-        print(arithmeticOperator)
         if (!(formula.peek?.isOperand ?? false)) {
             _ = formula.pop()
         }
@@ -56,6 +55,7 @@ class CalculatorService {
         var total = 0.0
         var mostRecentOperator: Character? = nil
         var tempFormulaStack = Stack<Calculator>()
+        formula.reverseStack()
         while (!formula.isEmpty) {
             let currentItem: Calculator = formula.pop()
             tempFormulaStack.push(currentItem)
@@ -65,7 +65,7 @@ class CalculatorService {
                 total += currentItem.operand
             } else {
                 switch mostRecentOperator {
-                case "%": total = mod(num1: currentItem.operand, num2: total)
+                case "%": total = mod(num1: total , num2: currentItem.operand)
                 case .none:
                     break
                 case .some(_):
@@ -73,7 +73,6 @@ class CalculatorService {
                 }
             }
         }
-        tempFormulaStack.reverseStack()
         formula = tempFormulaStack
         return total
     }

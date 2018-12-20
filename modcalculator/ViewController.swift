@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     var formulaTextView: UITextView?
     
     enum CalculatorKey: Int {
-        case zero = 1
+        case zero = 0
         case one
         case two
         case three
@@ -133,9 +133,9 @@ class ViewController: UIViewController {
     
     //make array of UIButton, add them to the UIStackView and returns the UIStackView.
     private func makeOperatorsStackView() -> UIStackView {
-        let titles = ["←", "c", "%" , "="]
+        let titles = ["c", "←", "%" , "="]
         var operatorButtons = [UIButton]()
-        var tag = 11
+        var tag = 10
         for eachTitle in titles {
             let button = UIButton()
             button.setTitle(eachTitle, for: .normal)
@@ -171,10 +171,17 @@ class ViewController: UIViewController {
         return largeStackView
     }
     
+    private func getProperFormat(for value: Double) {
+        
+    }
+    
     //MARK: button object functionality
     @objc func onNumberTapped(_ sender: UIButton) {
         switch sender.tag {
-        case (CalculatorKey.zero.rawValue)...(CalculatorKey.nine.rawValue):
+        case (0):
+            let pressedNumber = (sender.tag)
+            presenter?.genericDigitListener(digit: Double(pressedNumber))
+        case (CalculatorKey.one.rawValue)...(CalculatorKey.nine.rawValue):
             let pressedNumber = (sender.tag)
             presenter?.genericDigitListener(digit: Double(pressedNumber))
         case (CalculatorKey.clear.rawValue):
@@ -194,8 +201,26 @@ class ViewController: UIViewController {
 
 extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func resultsDidRefresh(value: Double) {
-        self.resultTextView?.text = String(value)
+        self.resultTextView?.text = value.getProperFormatForView()
+    
     }
+    
+    func formulaDidRefresh(value: Double) {
+        if(value.isNaN) {
+            self.formulaTextView?.text = "Error"
+        } else {
+            self.formulaTextView?.text = value.getProperFormatForView()
+        }
+    }
+    
+    func formulaDidRefresh(value: (Double, Character, Double)) {
+        self.formulaTextView?.text = "\(value.0.getProperFormatForView()) \(value.1) \(value.2.getProperFormatForView())"
+    }
+    
+    func formulaDidRefresh(value: (Double,Character)) {
+        self.formulaTextView?.text = "\(value.0.getProperFormatForView()) \(value.1)"
+    }
+    
     
     func buttonDidTap(_ value: Int) {
         print("button pressed \(value)")
@@ -208,4 +233,21 @@ extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func calculationDidFailed(message: String) {
         
     }
+}
+
+extension Double {
+    private func isWholeNumber() -> Bool {
+        let tempNumber = floor(self)
+        return tempNumber == self
+    }
+
+    func getProperFormatForView() -> String {
+        if self.isWholeNumber() {
+            return String(Int(self))
+        } else {
+            return String(self)
+        }
+    }
+    
+    
 }
