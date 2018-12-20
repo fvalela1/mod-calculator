@@ -12,7 +12,9 @@ import Foundation
 protocol CalculatorDelegate: class {
     func buttonDidTap(_ value: Int)
     func resultsDidRefresh(value: Double)
-    func formulaDidRefresh(value: String)
+    func formulaDidRefresh(value: Double)
+    func formulaDidRefresh(value: (Double, Character, Double))
+    func formulaDidRefresh(value: (Double, Character))
     func calculationDidSucceed()
     func calculationDidFailed(message: String)
 }
@@ -81,6 +83,8 @@ class CalculatorPresenter {
             refreshResultView(value: lastOperand ?? 0.0)
         } else if (lastOperand != nil) {
             calc.pushOperator(arithmeticOperator: op)
+        } else if (lastOperand == nil) {
+            return
         }
         lastOperator = op
         refreshFormulaView()
@@ -111,29 +115,26 @@ class CalculatorPresenter {
     
     
     private func refreshFormulaView() {
+        
         let completeDigitalValue = getDigitValueFromStack()
-        let current: String = digitStack.isEmpty ? "" : String(Int(completeDigitalValue))
-    
+        let current: Double = digitStack.isEmpty ? 0.0 : completeDigitalValue
         switch (lastOperator != nil && lastOperand != nil) {
         case true:
-            let previous = String(Int(lastOperand ?? -1))
-            
-            delegate?.formulaDidRefresh(value: previous + " " + String(lastOperator ?? "a") + " " + current)
-            return //temporary
-            //TODO Look into this portion and understasnd logic
-//            let template = activity.resources.getString(R.string.formula)
-//            let tmp: Double = lastOperand ?? 0.0
-//            let previous = tmp.toString()
-//            activity.formula.text = String.format(template, previous, lastOperator, curr)
+            let previous = lastOperand ?? -1
+            if(digitStack.isEmpty) {
+                delegate?.formulaDidRefresh(value: (previous, lastOperator!))
+            } else {
+                delegate?.formulaDidRefresh(value: (previous, lastOperator!, current))
+            }
+            break
         case false:
-            if lastOperand != nil  {
-                //will need to uncomment if we start working with doubles instead of ints
-//                let cleanLast: String = String(format: "%.16f", lastOperand ?? " ")
-                let cleanLastInt: String = String(Int(lastOperand ?? -1))
+            if lastOperand != nil && !lastOperand!.isNaN  {
+                let cleanLastInt: Double = lastOperand ?? -1
                 delegate?.formulaDidRefresh(value: cleanLastInt)
             } else {
                 delegate?.formulaDidRefresh(value: current)
             }
+            break
         }
     }
     
@@ -142,7 +143,7 @@ class CalculatorPresenter {
         delegate?.resultsDidRefresh(value: value)
     }
     
-    private func refreshFormulaView(value: String) {
+    private func refreshFormulaView(value: Double) {
         delegate?.formulaDidRefresh(value: value)
     }
     
