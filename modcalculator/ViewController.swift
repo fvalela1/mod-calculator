@@ -92,7 +92,7 @@ class ViewController: UIViewController {
             case (1):
                 textView.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
                 textView.textColor = .darkGray
-                textView.text = "test"
+                textView.text = "0"
                 textView.textAlignment = .right
                 self.resultTextView = textView
             case (2):
@@ -201,13 +201,17 @@ class ViewController: UIViewController {
 
 extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func resultsDidRefresh(value: Double) {
-        self.resultTextView?.text = value.getProperFormatForView()
-    
+        if(value.isNaN) {
+            self.resultTextView?.text = "Error!"
+        } else {
+            self.resultTextView?.text = value.getProperFormatForView()
+        }
+        
     }
     
     func formulaDidRefresh(value: Double) {
         if(value.isNaN) {
-            self.formulaTextView?.text = "Error"
+            self.formulaTextView?.text = "Error!"
         } else {
             self.formulaTextView?.text = value.getProperFormatForView()
         }
@@ -240,7 +244,7 @@ extension Double {
         let tempNumber = floor(self)
         return tempNumber == self
     }
-
+    
     func getProperFormatForView() -> String {
         if self.isWholeNumber() {
             return String(Int(self))
