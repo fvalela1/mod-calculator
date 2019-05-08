@@ -56,20 +56,6 @@ class CalculatorPresenter {
             lastOperator = nil
         }
     }
- 
-    func pushOperator(op: String) {
-
-        if (digitStack.isEmpty) {
-            calc.undo()
-            lastOperator = nil
-            lastOperand = calc.recalculate()
-            refreshFormulaView()
-            refreshResultView(value: lastOperand ?? 0.0)
-        } else {
-            digitStack.clear()
-            refreshFormulaView()
-        }
-    }
     
     func pushOperator(op: Character) {
         if (!digitStack.isEmpty) {
