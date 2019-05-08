@@ -22,14 +22,14 @@ protocol CalculatorDelegate: class {
 class CalculatorPresenter {
 
     weak var delegate: CalculatorDelegate?
-    private var digitStack: Stack<Double>
+    private var digitStack: Stack<String>
     private var calc: CalculatorService
     private var lastOperator: Character?
     private var lastOperand: Double?
     
     init(delegate: CalculatorDelegate) {
         self.delegate = delegate
-        self.digitStack = Stack<Double>()
+        self.digitStack = Stack<String>()
         self.calc = CalculatorService()
         self.lastOperand = nil
         self.lastOperator = nil
@@ -91,12 +91,9 @@ class CalculatorPresenter {
     }
     
     private func getDigitValueFromStack() -> Double {
-        var valueToReturn = 0.0
         let reversedDigitStack = digitStack.reversedArray()
-        for (index, digit) in reversedDigitStack.enumerated() {
-            valueToReturn += digit! * pow(10.0, Double(index))
-        }
-        return valueToReturn
+        let valueToReturn = reversedDigitStack.compactMap { $0 }.joined()
+        return getValidDouble(value: valueToReturn)
     }
     
     // Undo the last operation and refresh the views to reflect the change.
@@ -111,6 +108,16 @@ class CalculatorPresenter {
             digitStack.clear()
             refreshFormulaView()
         }
+    }
+    
+    private func getValidDouble(value: String) -> Double {
+        if !value.isDouble() {
+            return Double.nan
+        }
+        let valueToDouble = Double(value)!
+        let valueWithDecimalPrecision = (value.firstIndex(of: ".")) == nil ? value + ".0" : value
+        return String(valueToDouble) == valueWithDecimalPrecision ? valueToDouble : Double.nan
+        
     }
     
     
@@ -147,7 +154,7 @@ class CalculatorPresenter {
         delegate?.formulaDidRefresh(value: value)
     }
     
-    func genericDigitListener(digit: Double) {
+    func genericDigitListener(digit: String) {
         if(lastOperator == nil) {
             calc.clear()
             lastOperand = nil
@@ -156,4 +163,18 @@ class CalculatorPresenter {
         refreshFormulaView()
     }
     
+}
+extension String {
+    
+    func isDouble() -> Bool {
+        
+        if let doubleValue = Double(self) {
+            
+            if doubleValue >= 0 {
+                return true
+            }
+        }
+        
+        return false
+    }
 }

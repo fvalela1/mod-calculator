@@ -166,11 +166,11 @@
 				TargetAttributes = {
 					6288AA2621504CD9008EACFC = {
 						CreatedOnToolsVersion = 9.4.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 					6288AA3A21504CDA008EACFC = {
 						CreatedOnToolsVersion = 9.4.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						TestTargetID = 6288AA2621504CD9008EACFC;
 					};
 				};
@@ -393,7 +393,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francescovalela.modcalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -411,7 +411,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francescovalela.modcalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -431,7 +431,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francescovalela.modcalculatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/modcalculator.app/modcalculator";
 			};
@@ -452,7 +452,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francescovalela.modcalculatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/modcalculator.app/modcalculator";
 			};

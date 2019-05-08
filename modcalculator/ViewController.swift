@@ -180,10 +180,10 @@ class ViewController: UIViewController {
         switch sender.tag {
         case (0):
             let pressedNumber = (sender.tag)
-            presenter?.genericDigitListener(digit: Double(pressedNumber))
+            presenter?.genericDigitListener(digit: String(pressedNumber))
         case (CalculatorKey.one.rawValue)...(CalculatorKey.nine.rawValue):
             let pressedNumber = (sender.tag)
-            presenter?.genericDigitListener(digit: Double(pressedNumber))
+            presenter?.genericDigitListener(digit: String(pressedNumber))
         case (CalculatorKey.clear.rawValue):
             presenter?.clear()
         case (CalculatorKey.mod.rawValue):
@@ -246,11 +246,17 @@ extension Double {
     }
     
     func getProperFormatForView() -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        
         if self.isWholeNumber() {
-            return String(Int(self))
+            formatter.maximumFractionDigits = 0
         } else {
-            return String(self)
+            formatter.maximumFractionDigits = 16
         }
+        
+        return formatter.string(from: NSNumber(value: self))!
     }
     
     
