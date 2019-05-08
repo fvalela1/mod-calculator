@@ -54,7 +54,6 @@ class CalculatorPresenter {
             lastOperand = calc.recalculate()
             refreshResultView(value: lastOperand ?? 0.0)
             lastOperator = nil
-            refreshFormulaView()
         }
     }
  
@@ -76,11 +75,16 @@ class CalculatorPresenter {
         if (!digitStack.isEmpty) {
             let completeDigitValue = getDigitValueFromStack()
             calc.pushOperand(operand: completeDigitValue)
+            let nilOperandFlag = lastOperand == nil ? true : false
             lastOperand = calc.recalculate()
             lastOperator = op
             calc.pushOperator(arithmeticOperator: op)
             digitStack.clear()
-            refreshResultView(value: lastOperand ?? 0.0)
+            if (nilOperandFlag) {
+                refreshResultView(value: 0.0)
+            } else {
+                refreshResultView(value: lastOperand ?? 0.0)
+            }
         } else if (lastOperand != nil) {
             calc.pushOperator(arithmeticOperator: op)
         } else if (lastOperand == nil) {
@@ -91,8 +95,7 @@ class CalculatorPresenter {
     }
     
     private func getDigitValueFromStack() -> Double {
-        let reversedDigitStack = digitStack.reversedArray()
-        let valueToReturn = reversedDigitStack.compactMap { $0 }.joined()
+        let valueToReturn = digitStack.getItems().compactMap { $0 }.joined()
         return getValidDouble(value: valueToReturn)
     }
     
