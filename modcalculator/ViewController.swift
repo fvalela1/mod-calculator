@@ -218,11 +218,16 @@ extension ViewController: CalculatorDelegate, UITextViewDelegate {
     }
     
     func formulaDidRefresh(value: (Double, Character, Double)) {
-        self.formulaTextView?.text = "\(value.0.getProperFormatForView()) \(value.1) \(value.2.getProperFormatForView())"
+        
+        let output = value.2.getProperFormatForView() //dropfirst
+        if (output.count <= 1) {
+            self.formulaTextView?.text += " "
+        }
+        self.formulaTextView?.text += "\(output.last!)"
     }
     
     func formulaDidRefresh(value: (Double,Character)) {
-        self.formulaTextView?.text = "\(value.0.getProperFormatForView()) \(value.1)"
+        self.formulaTextView?.text += " \(value.1)"
     }
     
     

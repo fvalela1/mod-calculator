@@ -37,7 +37,7 @@ struct Stack<Element> {
         return items.reversed()
     }
     
-    fileprivate func getItems() -> [Element] {
+    func getItems() -> [Element] {
         return items
     }
     
