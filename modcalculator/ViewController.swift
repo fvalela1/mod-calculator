@@ -88,14 +88,14 @@ class ViewController: UIViewController {
             textView.textAlignment = .right
             textView.translatesAutoresizingMaskIntoConstraints = false
             
-            switch(index) {
-            case (1):
+            switch index {
+            case 1:
                 textView.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
                 textView.textColor = .darkGray
                 textView.text = "0"
                 textView.textAlignment = .right
                 self.resultTextView = textView
-            case (2):
+            case 2:
                 textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
                 textView.textColor = .lightGray
                 textView.text = "0"
@@ -206,7 +206,6 @@ extension ViewController: CalculatorDelegate, UITextViewDelegate {
         } else {
             self.resultTextView?.text = value.getProperFormatForView()
         }
-        
     }
     
     func formulaDidRefresh(value: Double) {
@@ -229,7 +228,6 @@ extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func formulaDidRefresh(value: (Double,Character)) {
         self.formulaTextView?.text += " \(value.1)"
     }
-    
     
     func buttonDidTap(_ value: Int) {
         print("button pressed \(value)")
