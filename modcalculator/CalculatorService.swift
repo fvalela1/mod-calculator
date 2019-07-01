@@ -12,11 +12,7 @@
 import Foundation
 
 class CalculatorService {
-    
-    deinit {
-        print("I'm well gone, bruh")
-    }
-    
+
     var formula = Stack<Calculator>()
     
     func pushOperand(operand: Double) {
@@ -26,9 +22,10 @@ class CalculatorService {
     // Push an operator and pop the last formula element if it is an operator
     // (can't have two operators one after the other)
     func pushOperator(arithmeticOperator: Character) {
-        if (!(formula.peek?.isOperand ?? false)) {
+        if formula.peek?.isOperand == false {
             _ = formula.pop()
         }
+        
         formula.push(Calculator(arithmeticOperator: arithmeticOperator))
     }
     
@@ -37,10 +34,10 @@ class CalculatorService {
     }
     
     func recalculate() -> Double {
-        if (formula.isEmpty) {
+        if formula.isEmpty {
             return 0.0
         }
-        else if (!(formula.peek?.isOperand)!) {
+        else if formula.peek?.isOperand == false {
             _ = formula.pop()
         }
         
@@ -48,12 +45,12 @@ class CalculatorService {
         var mostRecentOperator: Character? = nil
         var tempFormulaStack = Stack<Calculator>()
         formula.reverseStack()
-        while (!formula.isEmpty) {
+        while formula.isEmpty == false {
             let currentItem: Calculator = formula.pop()
             tempFormulaStack.push(currentItem)
-            if (!currentItem.isOperand) {
+            if currentItem.isOperand == false {
                 mostRecentOperator = currentItem.arithmeticOperator
-            } else if (mostRecentOperator == nil) {
+            } else if mostRecentOperator == nil {
                 total += currentItem.operand
             } else {
                 switch mostRecentOperator {
@@ -70,14 +67,14 @@ class CalculatorService {
     }
     
     func undo() {
-        if (!formula.isEmpty && (formula.peek?.isOperand)!) {
+        if formula.isEmpty == false && formula.peek?.isOperand ?? false {
             protectedFormulaPop()
         }
         protectedFormulaPop()
     }
     
     private func protectedFormulaPop() {
-        if(!formula.isEmpty) {
+        if formula.isEmpty == false {
             let _ = formula.pop()
         }
     }

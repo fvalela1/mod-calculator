@@ -178,20 +178,20 @@ class ViewController: UIViewController {
     //MARK: button object functionality
     @objc func onNumberTapped(_ sender: UIButton) {
         switch sender.tag {
-        case (0):
-            let pressedNumber = (sender.tag)
+        case 0:
+            let pressedNumber = sender.tag
             presenter?.genericDigitListener(digit: String(pressedNumber))
-        case (CalculatorKey.one.rawValue)...(CalculatorKey.nine.rawValue):
-            let pressedNumber = (sender.tag)
+        case CalculatorKey.one.rawValue...CalculatorKey.nine.rawValue:
+            let pressedNumber = sender.tag
             presenter?.genericDigitListener(digit: String(pressedNumber))
-        case (CalculatorKey.clear.rawValue):
+        case CalculatorKey.clear.rawValue:
             presenter?.clear()
-        case (CalculatorKey.mod.rawValue):
+        case CalculatorKey.mod.rawValue:
             // convert Int to a valid UnicodeScalar
             presenter?.pushOperator(op: Character(sender.currentTitle!))
-        case (CalculatorKey.delete.rawValue):
+        case CalculatorKey.delete.rawValue:
             presenter?.undo()
-        case (CalculatorKey.equal.rawValue):
+        case CalculatorKey.equal.rawValue:
             presenter?.equals()
         default:
             break
@@ -201,7 +201,7 @@ class ViewController: UIViewController {
 
 extension ViewController: CalculatorDelegate, UITextViewDelegate {
     func resultsDidRefresh(value: Double) {
-        if(value.isNaN) {
+        if value.isNaN {
             self.resultTextView?.text = "Error!"
         } else {
             self.resultTextView?.text = value.getProperFormatForView()
@@ -210,7 +210,7 @@ extension ViewController: CalculatorDelegate, UITextViewDelegate {
     }
     
     func formulaDidRefresh(value: Double) {
-        if(value.isNaN) {
+        if value.isNaN {
             self.formulaTextView?.text = "Error!"
         } else {
             self.formulaTextView?.text = value.getProperFormatForView()
@@ -263,6 +263,4 @@ extension Double {
         
         return formatter.string(from: NSNumber(value: self))!
     }
-    
-    
 }
