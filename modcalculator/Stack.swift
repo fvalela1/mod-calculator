@@ -43,7 +43,7 @@ struct Stack<Element> {
     
     mutating func reverseStack() {
         var tempStack = Stack<Element>()
-        while (!isEmpty) {
+        while isEmpty == false {
             tempStack.push(pop())
         }
         items = tempStack.items

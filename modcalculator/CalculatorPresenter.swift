@@ -35,7 +35,6 @@ class CalculatorPresenter {
         self.lastOperator = nil
     }
 
-
     // Clear the calculator stack and the local digit stack.
     func clear() {
         calc.clear()
@@ -46,9 +45,10 @@ class CalculatorPresenter {
         refreshResultView(value: calc.recalculate())
       
     }
+    
     // Push the digit stack to the calculator, recalculate the result and display it.
     func equals() {
-        if(!digitStack.isEmpty) {
+        if digitStack.isEmpty == false {
             calc.pushOperand(operand: getDigitValueFromStack())
             digitStack.clear()
             lastOperand = calc.recalculate()
@@ -58,7 +58,7 @@ class CalculatorPresenter {
     }
     
     func pushOperator(op: Character) {
-        if (!digitStack.isEmpty) {
+        if digitStack.isEmpty == false {
             let completeDigitValue = getDigitValueFromStack()
             calc.pushOperand(operand: completeDigitValue)
             let nilOperandFlag = lastOperand == nil ? true : false
@@ -66,14 +66,14 @@ class CalculatorPresenter {
             lastOperator = op
             calc.pushOperator(arithmeticOperator: op)
             digitStack.clear()
-            if (nilOperandFlag) {
+            if nilOperandFlag {
                 refreshResultView(value: 0.0)
             } else {
                 refreshResultView(value: lastOperand ?? 0.0)
             }
-        } else if (lastOperand != nil) {
+        } else if lastOperand != nil {
             calc.pushOperator(arithmeticOperator: op)
-        } else if (lastOperand == nil) {
+        } else if lastOperand == nil {
             return
         }
         lastOperator = op
@@ -87,7 +87,7 @@ class CalculatorPresenter {
     
     // Undo the last operation and refresh the views to reflect the change.
     func undo() {
-        if (digitStack.isEmpty) {
+        if digitStack.isEmpty {
             calc.undo()
             lastOperator = nil
             lastOperand = calc.recalculate()
@@ -100,7 +100,7 @@ class CalculatorPresenter {
     }
     
     private func getValidDouble(value: String) -> Double {
-        if !value.isDouble() {
+        if value.isDouble() == false {
             return Double.nan
         }
         let valueToDouble = Double(value)!
@@ -109,12 +109,11 @@ class CalculatorPresenter {
         
     }
     
-    
     private func refreshFormulaView() {
         
         let completeDigitalValue = getDigitValueFromStack()
         let current: Double = digitStack.isEmpty ? 0.0 : completeDigitalValue
-        switch (lastOperator != nil && lastOperand != nil) {
+        switch lastOperator != nil && lastOperand != nil {
         case true:
             let previous = lastOperand ?? -1
             if(digitStack.isEmpty) {
@@ -124,7 +123,7 @@ class CalculatorPresenter {
             }
             break
         case false:
-            if lastOperand != nil && !lastOperand!.isNaN  {
+            if lastOperand != nil && lastOperand!.isNaN == false {
                 let cleanLastInt: Double = lastOperand ?? -1
                 delegate?.formulaDidRefresh(value: cleanLastInt)
             } else {
@@ -144,7 +143,7 @@ class CalculatorPresenter {
     }
     
     func genericDigitListener(digit: String) {
-        if(lastOperator == nil) {
+        if lastOperator == nil {
             calc.clear()
             lastOperand = nil
         }
@@ -156,14 +155,11 @@ class CalculatorPresenter {
 extension String {
     
     func isDouble() -> Bool {
-        
         if let doubleValue = Double(self) {
-            
             if doubleValue >= 0 {
                 return true
             }
         }
-        
         return false
     }
 }
