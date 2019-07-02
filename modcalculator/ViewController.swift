@@ -94,11 +94,13 @@ class ViewController: UIViewController {
                 textView.textColor = .darkGray
                 textView.text = "0"
                 textView.textAlignment = .right
+                textView.isEditable = false
                 self.resultTextView = textView
             case 2:
                 textView.font = UIFont.systemFont(ofSize: 30, weight: .semibold)
                 textView.textColor = .lightGray
                 textView.text = "0"
+                textView.isEditable = false
                 self.formulaTextView = textView
             default:
                 break
